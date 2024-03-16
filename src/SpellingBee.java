@@ -1,4 +1,8 @@
+// Anya Kothari
+// Code that creates a game similiar to the game Spelling Bee, where the user
+// puts in a given set of letters, and all the possible words are outputted.
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -22,7 +26,7 @@ import java.util.Scanner;
  * It utilizes recursion to generate the strings, mergesort to sort them, and
  * binary search to find them in a dictionary.
  *
- * @author Zach Blick, [ADD YOUR NAME HERE]
+ * @author Zach Blick, Anya Kothari
  *
  * Written on March 5, 2023 for CS2 @ Menlo School
  *
@@ -45,12 +49,79 @@ public class SpellingBee {
     //  that will find the substrings recursively.
     public void generate() {
         // YOUR CODE HERE — Call your recursive method!
+        makeWords("", letters);
+    }
+
+    //public ArrayList<String> makeWords(String word, String letters) {
+    public void makeWords(String word, String letters) {
+        String newWord;
+        //System.out.println("Entered makewords with word = " + word + " and leters = " + letters);
+        if (letters.isEmpty()) {
+            //words.add(word);
+            //return words;
+            return;
+        }
+        for (int i = 0; i < letters.length(); i++) {
+            newWord = word + letters.charAt(i);
+            words.add(newWord);
+            makeWords(newWord,letters.substring(0,i)+letters.substring(i+1,letters.length()));
+            //word += letters.charAt(i);
+            //return makeWords(word, letters.substring(i));
+        }
+        //words.add(word);
+        //return words;
     }
 
     // TODO: Apply mergesort to sort all words. Do this by calling ANOTHER method
     //  that will find the substrings recursively.
     public void sort() {
-        // YOUR CODE HERE
+        // Call merge sort on words
+        words = mergeSort(words, 0, words.size() - 1);
+    }
+    private ArrayList<String> mergeSort(ArrayList<String> words, int low, int high) {
+        // If the ArrayList of words has only one element, return the list
+        if (high == low) {
+            //System.out.println("reached the mergesort base case with word = " + words.get(low));
+            ArrayList<String> sortedWords = new ArrayList<String>();
+            sortedWords.add(0, words.get(low));
+            return sortedWords;
+        }
+        // Continously splitting the list in half
+        int med = (high +low) / 2;
+        ArrayList<String> list1 = new ArrayList<>();
+        // Call mergeSort on the first half of the list
+        list1 = mergeSort(words, low, med);
+        ArrayList<String> list2 = new ArrayList<>();
+        // Call mergeSort on the second half of the list
+        list2 = mergeSort(words, med + 1, high);
+        // Merge the two lists together
+        return merge(list1, list2);
+    }
+
+    public ArrayList<String> merge(ArrayList<String> list1, ArrayList<String> list2) {
+        ArrayList<String> newList = new ArrayList<>();
+        int index1 = 0;
+        int index2 = 0;
+        int count = 0;
+
+        while (index1 < list1.size() && index2 < list2.size()) {
+            // Compare the words in each list to eachother
+            if ((list1.get(index1).compareTo(list2.get(index2))) < 0) {
+                newList.add(count, list1.get(index1++));
+            }
+            else {
+                newList.add(count, list2.get(index2++));
+            }
+            count++;
+        }
+        // Copy over any remaining elements
+        while (index1 < list1.size()) {
+            newList.add(count++, list1.get(index1++));
+        }
+        while (index2 < list2.size()) {
+            newList.add(count++, list2.get(index2++));
+        }
+        return newList;
     }
 
     // Removes duplicates from the sorted list.
@@ -69,6 +140,31 @@ public class SpellingBee {
     //  If it is not in the dictionary, remove it from words.
     public void checkWords() {
         // YOUR CODE HERE
+        for (int i = 0; i < words.size(); i++)
+        {
+            if (!(found(words.get(i), DICTIONARY, 0, DICTIONARY.length - 1))) {
+                words.remove(i);
+                i--;
+            }
+        }
+    }
+
+    // Returns true if s in the dictionary and false otherwise
+    public boolean found(String s, String[] dictionary, int start, int end) {
+        //System.out.println("In the found method to check " + s + " with start value " + start + " and end value " + end);
+        int mid = (start + end) / 2;
+        if (dictionary[mid].equals(s)) {
+            return true;
+        }
+        if (start >= end) {
+            return false;
+        }
+        if ((s.compareTo(dictionary[mid]) < 0)) {
+            return found(s, dictionary, start, mid - 1) ;
+        }
+        else {
+            return found(s, dictionary, mid + 1, end);
+        }
     }
 
     // Prints all valid words to wordList.txt
