@@ -1,0 +1,9 @@
+a
+ab
+ac
+bag
+ca
+cab
+cb
+ga
+gab
