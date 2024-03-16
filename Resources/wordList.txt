@@ -1,9 +1,13 @@
 a
 ab
 ac
-bag
+ad
+bad
+bcd
 ca
 cab
+cad
 cb
-ga
-gab
+dab
+db
+dc
