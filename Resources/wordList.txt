@@ -1,13 +1,5 @@
 a
-ab
 ac
-ad
-bad
-bcd
 ca
-cab
-cad
-cb
-dab
-db
-dc
+va
+vac
